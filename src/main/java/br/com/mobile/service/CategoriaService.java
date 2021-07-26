@@ -17,7 +17,6 @@ public class CategoriaService {
 
 	public List<Categoria> buscarTodos() {
 		List<Categoria> categorias = categoriaRepositorio.findAll();
-
 		return categorias;
 	}
 

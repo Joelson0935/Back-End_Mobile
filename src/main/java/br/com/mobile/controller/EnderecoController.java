@@ -14,45 +14,46 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.mobile.domain.Produto;
-import br.com.mobile.service.ProdutoService;
+import br.com.mobile.domain.Endereco;
+import br.com.mobile.service.EnderecoService;
 
 @RestController
-@RequestMapping("/Produtos")
-public class ProdutoController {
+@RequestMapping("/Enderecos")
+public class EnderecoController {
 
 	@Autowired
-	private ProdutoService produtoServico;
+	private EnderecoService enderecoServico;
 
 	@GetMapping
-	public List<Produto> buscarTodos() {
-		return produtoServico.buscarTodos();
+	public ResponseEntity<List<Endereco>> buscarTodos() {
+		List<Endereco> enderecos = enderecoServico.buscarTodos();
+		return ResponseEntity.ok().body(enderecos);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
-		Produto prod = produtoServico.buscarPorId(id);
-		if (prod != null) {
-			return ResponseEntity.ok(prod);
+	public ResponseEntity<Endereco> buscarPorId(@PathVariable Long id) {
+		Endereco endereco = enderecoServico.buscarPorId(id);
+		if (endereco != null) {
+			return ResponseEntity.ok(endereco);
 		}
 		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
-	public ResponseEntity<Produto> adicionar(@RequestBody Produto produto) {
-		produto = produtoServico.adicionar(produto);
-		return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
+	public ResponseEntity<Endereco> adicionar(@RequestBody Endereco endereco) {
+		endereco = enderecoServico.adicionar(endereco);
+		return new ResponseEntity<Endereco>(endereco, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto) {
-		Produto prod = produtoServico.buscarPorId(id);
-		if (prod == null || !prod.equals(produto)) {
+	public ResponseEntity<Endereco> atualizar(@PathVariable Long id, @RequestBody Endereco endereco) {
+		Endereco end = enderecoServico.buscarPorId(id);
+		if (end == null || !end.equals(endereco)) {
 			return ResponseEntity.notFound().build();
 		}
-		produto.setId(id);
-		prod = produtoServico.adicionar(produto);
-		return new ResponseEntity<Produto>(prod, HttpStatus.OK);
+		endereco.setId(id);
+		endereco = enderecoServico.adicionar(endereco);
+		return new ResponseEntity<Endereco>(endereco, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
@@ -61,7 +62,7 @@ public class ProdutoController {
 		if (buscarPorId(id) == null) {
 			return ResponseEntity.notFound().build();
 		}
-		produtoServico.excluir(id);
+		enderecoServico.excluir(id);
 		return ResponseEntity.noContent().build();
 	}
 }

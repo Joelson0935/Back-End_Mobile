@@ -1,22 +1,21 @@
 package br.com.mobile.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.mobile.domain.enuns.EstadoPagamento;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Pagamento implements Serializable {
+public class Pagamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,11 +24,18 @@ public abstract class Pagamento implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private EstadoPagamento estadoPagamento;
-	
+
 	@OneToOne
 	@JoinColumn(name = "pedido_id")
-	@MapsId
 	private Pedido pedido;
+
+	private Integer numeroDeParcelas;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dataVencimento;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dataPagamento;
 
 	public Pagamento() {
 		super();
@@ -40,6 +46,17 @@ public abstract class Pagamento implements Serializable {
 		this.id = id;
 		this.estadoPagamento = estadoPagamento;
 		this.pedido = pedido;
+	}
+
+	public Pagamento(Long id, EstadoPagamento estadoPagamento, Pedido pedido, Integer numeroDeParcelas,
+			Date dataVencimento, Date dataPagamento) {
+		super();
+		this.id = id;
+		this.estadoPagamento = estadoPagamento;
+		this.pedido = pedido;
+		this.numeroDeParcelas = numeroDeParcelas;
+		this.dataVencimento = dataVencimento;
+		this.dataPagamento = dataPagamento;
 	}
 
 	public Long getId() {
@@ -64,6 +81,32 @@ public abstract class Pagamento implements Serializable {
 
 	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
+	}
+
+	public Integer getNumeroDeParcelas() {
+		return numeroDeParcelas;
+	}
+
+	public void setNumeroDeParcelas(Integer numeroDeParcelas) {
+		
+		this.numeroDeParcelas = numeroDeParcelas;
+	}
+
+	public Date getDataVencimento() {
+		return dataVencimento;
+	}
+
+	public void setDataVencimento(Date dataVencimento) {
+		
+		this.dataVencimento = dataVencimento;
+	}
+
+	public Date getDataPagamento() {
+		return dataPagamento;
+	}
+
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
 	}
 
 	@Override

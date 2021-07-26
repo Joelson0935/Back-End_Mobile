@@ -1,6 +1,7 @@
 package br.com.mobile.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mobile.domain.Categoria;
+import br.com.mobile.domain.dto.CategoriaDTO;
 import br.com.mobile.service.CategoriaService;
 
 @RestController
@@ -25,8 +27,10 @@ public class CategoriaController {
 	private CategoriaService categoriaServico;
 
 	@GetMapping
-	public List<Categoria> buscar() {
-		return categoriaServico.buscarTodos();
+	public ResponseEntity<List<CategoriaDTO>> buscarTodos() {
+		List<Categoria> categorias = categoriaServico.buscarTodos();
+		List<CategoriaDTO> catDTO = categorias.stream().map(cat -> new CategoriaDTO(cat)).collect(Collectors.toList());		
+		return ResponseEntity.ok().body(catDTO);
 	}
 
 	@GetMapping("/{id}")
@@ -52,7 +56,7 @@ public class CategoriaController {
 		}
 		categoria.setId(id);
 		categoria = categoriaServico.adicionar(categoria);
-		return new ResponseEntity<Categoria>(categoria, HttpStatus.CREATED);
+		return new ResponseEntity<Categoria>(categoria,  HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

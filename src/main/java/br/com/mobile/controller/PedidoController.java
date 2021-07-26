@@ -14,45 +14,46 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.mobile.domain.Produto;
-import br.com.mobile.service.ProdutoService;
+import br.com.mobile.domain.Pedido;
+import br.com.mobile.service.PedidoService;
 
 @RestController
-@RequestMapping("/Produtos")
-public class ProdutoController {
+@RequestMapping("/Pedidos")
+public class PedidoController {
 
 	@Autowired
-	private ProdutoService produtoServico;
+	private PedidoService pedidoServico;
 
 	@GetMapping
-	public List<Produto> buscarTodos() {
-		return produtoServico.buscarTodos();
+	public ResponseEntity<List<Pedido>> buscarTodos() {
+		List<Pedido> pedidos = pedidoServico.buscarTodos();
+		return ResponseEntity.ok().body(pedidos);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
-		Produto prod = produtoServico.buscarPorId(id);
-		if (prod != null) {
-			return ResponseEntity.ok(prod);
+	public ResponseEntity<Pedido> buscarPorId(@PathVariable Long id) {
+		Pedido pedido = pedidoServico.buscarPorId(id);
+		if (pedido != null) {
+			return ResponseEntity.ok(pedido);
 		}
 		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
-	public ResponseEntity<Produto> adicionar(@RequestBody Produto produto) {
-		produto = produtoServico.adicionar(produto);
-		return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
+	public ResponseEntity<Pedido> adicionar(@RequestBody Pedido pedido) {
+		pedido = pedidoServico.adicionar(pedido);
+		return new ResponseEntity<Pedido>(pedido, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto) {
-		Produto prod = produtoServico.buscarPorId(id);
-		if (prod == null || !prod.equals(produto)) {
+	public ResponseEntity<Pedido> atualizar(@PathVariable Long id, @RequestBody Pedido pedido) {
+		Pedido ped = pedidoServico.buscarPorId(id);
+		if (ped == null || !ped.equals(pedido)) {
 			return ResponseEntity.notFound().build();
 		}
-		produto.setId(id);
-		prod = produtoServico.adicionar(produto);
-		return new ResponseEntity<Produto>(prod, HttpStatus.OK);
+		pedido.setId(id);
+		pedido = pedidoServico.adicionar(pedido);
+		return new ResponseEntity<Pedido>(pedido, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
@@ -61,7 +62,7 @@ public class ProdutoController {
 		if (buscarPorId(id) == null) {
 			return ResponseEntity.notFound().build();
 		}
-		produtoServico.excluir(id);
+		pedidoServico.excluir(id);
 		return ResponseEntity.noContent().build();
 	}
 }

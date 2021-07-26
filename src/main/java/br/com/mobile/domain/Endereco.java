@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 public class Endereco implements Serializable {
 
@@ -22,10 +25,11 @@ public class Endereco implements Serializable {
 	private String complemento;
 	private String bairro;
 	private String cep;
-
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@ManyToOne
 	private Cliente cliente;
-
+	
 	@ManyToOne
 	private Cidade cidade;
 

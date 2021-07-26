@@ -26,9 +26,13 @@ public class Cliente implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String nome;
+	
 	private String email;
+	
 	private String cpfOuCnpj;
+	
 	@Enumerated(EnumType.STRING)
 	private TipoCliente tipoCliente;
 

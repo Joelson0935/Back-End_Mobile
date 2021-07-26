@@ -25,7 +25,7 @@ public class CidadeController {
 	private CidadeService cidadeServico;
 
 	@GetMapping
-	public List<Cidade> buscar() {
+	public List<Cidade> buscarTodos() {
 		return cidadeServico.buscarTodos();
 	}
 
@@ -52,7 +52,7 @@ public class CidadeController {
 		}
 		cidade.setId(id);
 		cid = cidadeServico.adicionar(cidade);
-		return new ResponseEntity<Cidade>(cid, HttpStatus.CREATED);
+		return new ResponseEntity<Cidade>(cid,  HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

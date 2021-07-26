@@ -2,15 +2,22 @@ package br.com.mobile.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Pedido implements Serializable {
@@ -20,19 +27,25 @@ public class Pedido implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date instant;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
+	@OneToOne
 	private Pagamento pagamento;
 
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "endereco_de_entrega_id")
 	private Endereco enderecoEntrega;
+
+	@OneToMany(mappedBy = "pedido")
+	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Pedido() {
 		super();
@@ -87,6 +100,14 @@ public class Pedido implements Serializable {
 		this.enderecoEntrega = enderecoEntrega;
 	}
 
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -112,4 +133,8 @@ public class Pedido implements Serializable {
 		return true;
 	}
 
+	public void pegaEndereco(Endereco endereco) {
+		endereco.getId();
+		endereco.getLogradouro();
+	}
 }

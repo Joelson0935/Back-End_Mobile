@@ -14,45 +14,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.mobile.domain.Produto;
-import br.com.mobile.service.ProdutoService;
+import br.com.mobile.domain.Cliente;
+import br.com.mobile.service.ClienteService;
 
 @RestController
-@RequestMapping("/Produtos")
-public class ProdutoController {
+@RequestMapping("/Clientes")
+public class ClienteController {
 
 	@Autowired
-	private ProdutoService produtoServico;
+	private ClienteService clienteServico;
 
 	@GetMapping
-	public List<Produto> buscarTodos() {
-		return produtoServico.buscarTodos();
+	public List<Cliente> buscarTodos() {
+		return clienteServico.buscarTodos();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
-		Produto prod = produtoServico.buscarPorId(id);
-		if (prod != null) {
-			return ResponseEntity.ok(prod);
+	public ResponseEntity<Cliente> buscarPorId(@PathVariable Long id) {
+		Cliente cliente = clienteServico.buscarPorId(id);
+		if (cliente != null) {
+			return ResponseEntity.ok(cliente);
 		}
 		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
-	public ResponseEntity<Produto> adicionar(@RequestBody Produto produto) {
-		produto = produtoServico.adicionar(produto);
-		return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
+	public ResponseEntity<Cliente> adicionar(@RequestBody Cliente cliente) {
+		cliente = clienteServico.adicionar(cliente);
+		return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto) {
-		Produto prod = produtoServico.buscarPorId(id);
-		if (prod == null || !prod.equals(produto)) {
+	public ResponseEntity<Cliente> atualizar(@PathVariable Long id, @RequestBody Cliente cliente) {
+		Cliente cli = clienteServico.buscarPorId(id);
+		if (cli == null || !cli.equals(cliente)) {
 			return ResponseEntity.notFound().build();
 		}
-		produto.setId(id);
-		prod = produtoServico.adicionar(produto);
-		return new ResponseEntity<Produto>(prod, HttpStatus.OK);
+		cliente.setId(id);
+		cli = clienteServico.adicionar(cliente);
+		return new ResponseEntity<Cliente>(cli, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
@@ -61,7 +61,7 @@ public class ProdutoController {
 		if (buscarPorId(id) == null) {
 			return ResponseEntity.notFound().build();
 		}
-		produtoServico.excluir(id);
+		clienteServico.excluir(id);
 		return ResponseEntity.noContent().build();
 	}
 }
