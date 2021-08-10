@@ -3,6 +3,8 @@ package br.com.mobile.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,20 +45,22 @@ public class EstadoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Estado> adicionar(@RequestBody Estado estado) {
+	public ResponseEntity<Estado> adicionar(@Valid @RequestBody EstadoDTO estadoDto) {
+		Estado estado = estadoServico.adicionarDto(estadoDto);
 		estado = estadoServico.adicionar(estado);
 		return new ResponseEntity<Estado>(estado, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Estado> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
+	public ResponseEntity<Estado> atualizar(@Valid @PathVariable Long id, @RequestBody EstadoDTO estadoDto) {
 		Estado est = estadoServico.buscarPorId(id);
-		if (est == null || !est.equals(estado)) {
+		est = estadoServico.adicionarDto(estadoDto);
+		if (est == null) {
 			return ResponseEntity.notFound().build();
 		}
-		estado.setId(id);
-		estado = estadoServico.adicionar(estado);
-		return new ResponseEntity<Estado>(estado, HttpStatus.OK);
+		est.setId(id);
+		estadoServico.adicionar(est);
+		return new ResponseEntity<Estado>(est, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

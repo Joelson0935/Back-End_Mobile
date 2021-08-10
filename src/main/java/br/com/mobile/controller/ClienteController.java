@@ -2,6 +2,8 @@ package br.com.mobile.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mobile.domain.Cliente;
+import br.com.mobile.domain.dto.ClienteDTO;
 import br.com.mobile.service.ClienteService;
 
 @RestController
@@ -38,20 +41,28 @@ public class ClienteController {
 		return ResponseEntity.notFound().build();
 	}
 
-	@PostMapping
-	public ResponseEntity<Cliente> adicionar(@RequestBody Cliente cliente) {
+	@PostMapping // POST USANDO O PADRÃO DTO
+	public ResponseEntity<Cliente> adicionarDto(@Valid @RequestBody ClienteDTO clienteDto) {
+		Cliente cliente = clienteServico.adicionarDto(clienteDto);
 		cliente = clienteServico.adicionar(cliente);
 		return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
 	}
 
+//	@PostMapping
+//	public ResponseEntity<Cliente> adicionar(@Valid @RequestBody Cliente cliente) {
+//		cliente = clienteServico.adicionar(cliente);
+//		return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
+//	}
+
 	@PutMapping("/{id}")
-	public ResponseEntity<Cliente> atualizar(@PathVariable Long id, @RequestBody Cliente cliente) {
-		Cliente cli = clienteServico.buscarPorId(id);
-		if (cli == null || !cli.equals(cliente)) {
+	public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long id, @RequestBody ClienteDTO clienteDto) {
+		Cliente  cli = clienteServico.buscarPorId(id);
+		 cli = clienteServico.adicionarDto(clienteDto);
+		if (cli == null) {
 			return ResponseEntity.notFound().build();
 		}
-		cliente.setId(id);
-		cli = clienteServico.adicionar(cliente);
+		cli.setId(id);
+	   cli = clienteServico.adicionar(cli);
 		return new ResponseEntity<Cliente>(cli, HttpStatus.OK);
 	}
 

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 
 import br.com.mobile.domain.enuns.TipoCliente;
 
@@ -28,7 +30,7 @@ public class Cliente implements Serializable {
 	private Long id;
 	
 	private String nome;
-	
+	@Email(message = "Email Inválido")
 	private String email;
 	
 	private String cpfOuCnpj;
@@ -36,7 +38,7 @@ public class Cliente implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private TipoCliente tipoCliente;
 
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
 	@ElementCollection

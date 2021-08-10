@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.mobile.domain.Estado;
+import br.com.mobile.domain.dto.EstadoDTO;
 import br.com.mobile.repository.EstadoRepository;
 import br.com.mobile.service.exception.Mensagem;
 
@@ -29,9 +30,12 @@ public class EstadoService {
 	}
 
 	public Estado adicionar(Estado estado) {
-
 		Estado est = estadoRepositorio.save(estado);
 		return est;
+	}
+
+	public Estado adicionarDto(EstadoDTO estadoDto) {
+		return new Estado(estadoDto.getId(), estadoDto.getNome());
 	}
 
 	public Estado atualizar(Long id, Estado estado) {
