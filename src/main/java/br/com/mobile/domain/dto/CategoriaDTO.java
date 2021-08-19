@@ -2,6 +2,9 @@ package br.com.mobile.domain.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import br.com.mobile.domain.Categoria;
 
 public class CategoriaDTO implements Serializable {
@@ -9,7 +12,8 @@ public class CategoriaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-
+	@NotNull(message = "Este campo deve ser preenchido.")
+	@Size(min = 5, max = 60, message = "Nome deve ter entre 5 e 60 caracteres.")
 	private String nome;
 
 	public CategoriaDTO() {

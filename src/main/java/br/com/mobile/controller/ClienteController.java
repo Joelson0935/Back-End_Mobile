@@ -1,6 +1,7 @@
 package br.com.mobile.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mobile.domain.Cliente;
+import br.com.mobile.domain.dto.ClienteDTO;
+import br.com.mobile.domain.dto.NovoClienteDTO;
 import br.com.mobile.service.ClienteService;
 
 @RestController
@@ -25,8 +28,11 @@ public class ClienteController {
 	private ClienteService clienteServico;
 
 	@GetMapping
-	public List<Cliente> buscarTodos() {
-		return clienteServico.buscarTodos();
+	public ResponseEntity<List<NovoClienteDTO>> buscarTodos() {
+		List<Cliente> clientes = clienteServico.buscarTodos();
+		List<NovoClienteDTO> clientesDto = clientes.stream().map(c -> new NovoClienteDTO(c))
+				.collect(Collectors.toList());
+		return new ResponseEntity<List<NovoClienteDTO>>(clientesDto, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
@@ -38,8 +44,9 @@ public class ClienteController {
 		return ResponseEntity.notFound().build();
 	}
 
-	@PostMapping
-	public ResponseEntity<Cliente> adicionar(@RequestBody Cliente cliente) {
+	@PostMapping // Adicionando um dto de cliente.
+	public ResponseEntity<Cliente> adicionar(@RequestBody ClienteDTO clienteDto) {
+		Cliente cliente = clienteServico.fromDto(clienteDto);
 		cliente = clienteServico.adicionar(cliente);
 		return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
 	}

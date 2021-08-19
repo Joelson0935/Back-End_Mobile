@@ -3,6 +3,8 @@ package br.com.mobile.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,20 +57,22 @@ public class CategoriaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Categoria> adicionar(@RequestBody Categoria categoria) {
+	public ResponseEntity<Categoria> adicionar(@Valid @RequestBody CategoriaDTO categoriaDto) {
+		Categoria categoria = categoriaServico.paraDto(categoriaDto);
 		categoria = categoriaServico.adicionar(categoria);
 		return new ResponseEntity<Categoria>(categoria, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Categoria> atualizar(@PathVariable Long id, @RequestBody Categoria categoria) {
+	public ResponseEntity<Categoria> atualizar(@Valid @PathVariable Long id, @RequestBody CategoriaDTO categoriaDto) {
 		Categoria cat = categoriaServico.buscarPorId(id);
-		if (cat == null || !cat.equals(categoria)) {
+		cat = categoriaServico.paraDto(categoriaDto);
+		if (cat == null) {
 			return ResponseEntity.notFound().build();
 		}
-		categoria.setId(id);
-		categoria = categoriaServico.adicionar(categoria);
-		return new ResponseEntity<Categoria>(categoria, HttpStatus.OK);
+		cat.setId(id);
+		cat = categoriaServico.adicionar(cat);
+		return new ResponseEntity<Categoria>(cat, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
